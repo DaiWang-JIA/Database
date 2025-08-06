@@ -679,11 +679,423 @@ from score;
 
 # 约束
 
+## 概述
 
+![image-20250803115831623](Mysql数据库.assets/image-20250803115831623.png)
+
+- 注意：约束是作用于表中字段上的，可以在创建表/修改表时添加约束
+
+
+
+## 约束演示
+
+- 案例
+
+![image-20250803192358593](Mysql数据库.assets/image-20250803192358593.png)
+
+```sql
+-- ---------------约束演示-------------------
+
+create table user(
+    id int primary key auto_increment comment '主键',
+    name varchar(10) not null unique comment '姓名',
+    age int check(age>0 and age<=120) comment '年龄',
+    status char(1) default  '1' comment '状态',
+    gender char(1) comment '性别'
+) comment '用户表';
+
+-- 插入数据
+insert into user(name, age, status, gender) values('Tom1',19,'1','男'),('Tom2',20,'0','男');
+insert into user(name, age, status, gender) values('Tom3',19,'1','男');
+
+-- 非法 insert into user(name, age, status, gender) values(null,19,'1','男');
+-- 非法 insert into user(name, age, status, gender) values('Tom3',19,'1','男');
+
+insert into user(name, age, status, gender) values('Tom4',80,'1','男');
+--  非法  insert into user(name, age, status, gender) values('Tom5',-1,'1','男');
+
+insert into user(name, age, gender) values('Tom5',120,'男');
+```
+
+
+
+## 外键约束
+
+- 概念
+
+![image-20250803194513778](Mysql数据库.assets/image-20250803194513778.png)
+
+
+
+- 语法
+
+![image-20250804221318546](Mysql数据库.assets/image-20250804221318546.png)
+
+```sql
+create table dept(
+    id int auto_increment comment 'ID' primary key ,
+    name varchar(50) not null comment '部门名称'
+)comment  '部门表';
+insert into dept(id,name) values (1,'研发部'),(2,'市场部'),(3,'财务部'),(4,'销售部'),(5,'总经办');
+
+create table emp(
+    id int auto_increment comment 'ID' primary key ,
+    name varchar(50) not null comment '姓名',
+    age int comment '年龄',
+    job varchar(20) comment '职位',
+    salary int comment '薪资',
+    entrydate date comment '入职时间',
+    manager int comment '直属领导ID',
+    dept_id int comment '部门ID'
+) comment '员工表';
+
+insert into emp (id, name, age,job, salary, entrydate, manager, dept_id) values
+          (1, '金庸', 66, '总裁', 20000, '2000-01-01', null, 5),
+          (2, '张无忌', 20, '项目经理', 12500, '2005-12-05', 1, 1),
+          (3, '杨逍', 33, '开发', 8400, '2000-11-03', 2, 1),
+          (4, '韦一笑', 48, '开发', 11000, '2002-02-05', 2, 1),
+          (5, '常遇春', 43, '开发', 10500, '2004-09-07', 3, 1),
+          (6, '小昭', 19, '程序员鼓励师', 6600, '2004-10-12', 2, 1);
+
+
+-- 添加外键
+alter table  emp add constraint fk_emp_dept_id foreign key (dept_id) references dept(id);
+
+-- 删除外键
+alter table emp drop foreign key  fk_emp_dept_id;
+```
+
+
+
+## 外键删除更新行为
+
+![image-20250804221918411](Mysql数据库.assets/image-20250804221918411.png)
+
+![image-20250804222015542](Mysql数据库.assets/image-20250804222015542.png)
+
+```sql
+alter table  emp add constraint fk_emp_dept_id foreign key (dept_id) references dept(id) on update cascade  on delete  cascade ;
+
+alter table  emp add constraint fk_emp_dept_id foreign key (dept_id) references dept(id) on update set null   on delete  set null ;
+```
+
+
+
+## 小结
+
+![image-20250804222936306](Mysql数据库.assets/image-20250804222936306.png)
 
 
 
 # 多表查询
+
+## 多表关系
+
+- 一对多
+
+![image-20250805123708934](Mysql数据库.assets/image-20250805123708934.png)
+
+- 多对多
+
+![image-20250805123956733](Mysql数据库.assets/image-20250805123956733.png)
+
+- 一对一
+
+![image-20250805125826400](Mysql数据库.assets/image-20250805125826400.png)
+
+```sql
+-- 多对多
+ create table student(
+     id int auto_increment primary key  comment '主键ID',
+     name varchar(10) comment '姓名',
+     no varchar(10) comment '学号'
+ ) comment '学生表';
+
+insert into student values (null,'黛绮丝','2000100101'),
+                           (null,'谢逊','2000100102'),
+                           (null,'殷天正','2000100103'),
+                           (null,'韦一笑','2000100104');
+
+
+create table course(
+    id int auto_increment primary key  comment '主键ID',
+    name varchar(10) comment '课程名称'
+) comment '课程表';
+insert into  course values (null,'Java'),(null,'OHP'),(null,'Mysql'),(null,'Hadoop');
+
+create table student_course(
+    id int auto_increment comment '主键' primary key ,
+    studentid int not null comment '学生ID',
+    courseid int not null comment '课程ID',
+    constraint fk_courseid foreign key (courseid) references course(id),
+    constraint fk_studentid foreign key (studentid) references student(id)
+) comment '学生课程中间表';
+
+insert into student_course values (null,1,1),(null,1,2),(null,1,3),(null,2,2),(null,2,3),(null,3,4);
+
+
+-- 一对一
+create table  tb_user(
+    id int auto_increment primary key  comment '主键ID',
+    name varchar(10) comment '姓名',
+    age int comment '年龄',
+    gender char(1) comment '性别',
+    phone char(11) comment '手机号'
+) comment '用户基本信息表';
+
+
+
+create table  tb_user_edu(
+    id int auto_increment primary key  comment '主键ID',
+    degree varchar(20) comment '学历',
+    major varchar(50) comment '专业',
+    primaryschool varchar(50) comment '小学',
+    middleschool varchar(50) comment '中学',
+    universchool varchar(50) comment '大学',
+    userid int unique  comment '用户ID',
+    constraint fk_userid foreign key (userid) references tb_user(id)
+) comment '用户教育信息表';
+
+insert into tb_user values
+    (null,'黄渤',45,'1','18800001111'),
+    (null,'冰冰',35,'2','18800002222'),
+    (null,'马云',55,'1','18800008888'),
+    (null,'李彦冰',59,'1','18800009999');
+
+insert into tb_user_edu (id,degree, major, primaryschool, middleschool, universchool, userid) values
+    (null,'本科','舞蹈','静安第一小学','静安第一中学','北京舞蹈学院','1'),
+    (null,'硕士','朝阳第一小学','朝阳第一中学','北京电影学院','','2'),
+    (null,'本科','英语','杭州第一小学','杭州第一中学' ,'杭州师范大学','3'),
+    (null,'本科','应用数学','阳泉第一小学','阳泉第一中学','清华大学','4');
+
+
+```
+
+
+
+
+
+## 概述
+
+ ![image-20250805162013613](Mysql数据库.assets/image-20250805162013613.png)
+
+```sql
+-- 多表查询
+select * from emp,dept where emp.dept_id=dept.id;
+```
+
+- 分类
+
+![image-20250805162134736](Mysql数据库.assets/image-20250805162134736.png)
+
+
+
+## 内连接查询
+
+- 内连接查询语法
+
+![image-20250805162334258](Mysql数据库.assets/image-20250805162334258.png)
+
+```sql
+-- 内连接演示
+-- 1.查询每一个员工的姓名，及关联的部门名称（隐式内连接实现）
+-- 表结构：emp,dept
+-- 连接条件:emp.dept_d=dept.id
+
+select emp.name,dept.name from emp,dept where emp.dept_id=dept.id;
+
+select e.name,d.name from emp e,dept d where e.dept_id=d.id;
+-- 如果起了别名就不能使用原名
+
+
+-- 2.查询每一个员工的姓名，及关联的部门名称（显式内连接实现）  .....[inner] join ...on...
+-- 表结构：emp,dept
+-- 连接条件:emp.dept_d=dept.id
+
+select e.name,d.name from emp e inner join dept d on e.dept_id=d.id
+```
+
+
+
+## 外连接
+
+- 外连接查询语法
+
+![image-20250805163513008](Mysql数据库.assets/image-20250805163513008.png)
+
+```sql
+-- 外连接演示
+-- 1.查询emp表的所有数据，和相对应的部门信息（左外连接）
+-- 表结构：emp,dept
+-- 连接条件:emp.dept_d=dept.id
+
+select e.* ,d.name from emp e left outer join dept d on e.dept_id=d.id;
+
+
+
+-- 1.查询emp表的所有数据，和相对应的部门信息（右外连接）
+select e.* ,d.name from emp e right outer join dept d on e.dept_id=d.id;
+```
+
+
+
+
+
+## 自连接
+
+- 语法
+
+![image-20250805165739400](Mysql数据库.assets/image-20250805165739400.png)
+
+```sql
+-- 自连接
+-- 1.查询员工 及所属直接领导
+-- 表结构：emp
+
+select a.name,b.name from emp a,emp b where a.managerid=b.id;
+
+-- 2. 查询所有员工emp及其领导的名字emp,如果员工没有领导，也需要查询出来
+-- 表结构：emp a,emp b
+
+select a.name '员工',b.anme '领导' from emp a left join emp b on a.managerid=b.id;
+```
+
+
+
+## 联合查询
+
+- 语法
+
+![image-20250805172340858](Mysql数据库.assets/image-20250805172340858.png)
+
+```sql
+-- union all,union
+-- 1.将年薪低于5000的员工和年龄大于50的员工
+select * from emp where salary<5000
+union all
+select * from emp where age>50;
+
+-- 去重
+select * from emp where salary<5000
+union 
+select * from emp where age>50;
+
+
+```
+
+![image-20250805172847654](Mysql数据库.assets/image-20250805172847654.png)
+
+
+
+## 子查询
+
+![image-20250805175121877](Mysql数据库.assets/image-20250805175121877.png)
+
+
+
+### 标量子查询
+
+![image-20250805182016802](Mysql数据库.assets/image-20250805182016802.png)
+
+```sql
+-- 标量子查询
+-- 1.查询“销售部”的所有员工信息
+
+-- a.查询“销售部”的ID
+select id from dept where name='销售部';
+-- b.根据销售部ID，查询员工信息
+select * from emp where dept_id=(select id from dept where name='销售部');
+
+-- 2.查询在“方东白”入职之后的信息
+-- a.查询“方东白”的入职日期
+select entrydata from emp where name='方东白';
+
+-- b.查询入职之后的信息
+select * from emp where entrydate >(select entrydata from emp where name='方东白');
+```
+
+
+
+### 列子查询
+
+![image-20250805184839273](Mysql数据库.assets/image-20250805184839273.png)
+
+![image-20250805185114339](Mysql数据库.assets/image-20250805185114339.png)
+
+```sql
+-- 列子查询
+-- 1.查询销售部和市场部的所有员工信息
+-- a.查询销售和市场部ID
+select id from dept where name='销售部' or name='市场部';
+
+-- b.根据ID，查询员工信息
+select * from emp where dept_id in (select id from dept where name='销售部' or name='市场部');
+
+-- 2.查询比财务部所有人工资都高的员工的信息
+-- a.查询财务部员工工资
+select id from dept where name='财务部';
+
+selcet salary drom emp where dept_id=(select id from dept where name='财务部');
+
+-- b.比财务部所有人工资都高的
+select * from emp where salary>all(selcet salary drom emp where dept_id=(select id from dept where name='财务部'));
+
+```
+
+
+
+### 行子查询
+
+![image-20250805194820787](Mysql数据库.assets/image-20250805194820787.png)
+
+```sql
+-- 行子查询
+-- 1. 查询与“张无忌”的薪资及直属领导相同的员工信息
+-- a.查询“张无忌”的薪资及直属领导
+
+select salary,managerid from emp where name='张无忌';
+
+-- b.查询与“张无忌”的薪资及直属领导相同的员工信息
+select * from emp where salary=12500 and managerid=1;
+
+select * from emp where (salary,managerid)=(select salary,managerid from emp where name='张无忌');
+
+```
+
+
+
+### 表子查询
+
+![image-20250805195003456](Mysql数据库.assets/image-20250805195003456.png)
+
+```sql
+-- 表子查询
+-- 1.查询与鹿仗客和宋远桥职位和薪资相同的员工信息
+-- a. 查询鹿仗客和宋远桥职位和薪资
+select jod,salary from emp where name='鹿仗客' or name='宋远桥';
+
+-- b. 查询与鹿仗客和宋远桥职位和薪资相同的员工信息
+select * from emp where {job,salary) in (select jod,salary from emp where name='鹿仗客' or name='宋远桥');
+
+-- 2. 查询入职日期为“2006-01-01”之后的员工信息，及部门信息
+-- a.入职日期为2006-01-01”之后的员工信息
+select * from emp where entrydata >"2006-01-01";
+
+--b.查询入职日期为“2006-01-01”之后的员工信息，及部门信息
+select * from (select * from emp where entrydata >"2006-01-01") e left join dept d on e.dept_id=d.id;
+```
+
+
+
+## 案例
+
+![image-20250805204447995](Mysql数据库.assets/image-20250805204447995.png)
+
+![image-20250805205909835](Mysql数据库.assets/image-20250805205909835.png)
+
+![image-20250805224752642](Mysql数据库.assets/image-20250805224752642.png)
+
+
 
 
 
