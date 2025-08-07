@@ -1095,11 +1095,161 @@ select * from (select * from emp where entrydata >"2006-01-01") e left join dept
 
 ![image-20250805224752642](Mysql数据库.assets/image-20250805224752642.png)
 
+![image-20250807090935664](Mysql数据库.assets/image-20250807090935664.png)
 
+![image-20250807092508565](Mysql数据库.assets/image-20250807092508565.png)
+
+![image-20250807093143496](Mysql数据库.assets/image-20250807093143496.png)
+
+![image-20250807093925331](Mysql数据库.assets/image-20250807093925331.png)
+
+
+
+## 小结
+
+![image-20250807094244694](Mysql数据库.assets/image-20250807094244694.png)
 
 
 
 
 
 # 事务
+
+## 简介
+
+![image-20250807095958976](Mysql数据库.assets/image-20250807095958976.png)
+
+
+
+## 操作演示
+
+```sql
+--              事务操作
+-- 数据准备
+create table account(
+    id int auto_increment primary key  comment '主键ID',
+    name varchar(10) comment '姓名',
+    money int comment '余额'
+) comment '账户表';
+insert into account(id, name, money) VALUES (null,'张三',2000),(null,'李四',2000);
+
+-- 恢复数据
+update account set money=2000 where name='张三' or name='李四';
+
+-- 转账操作
+-- 1.查询张三账户余额
+select * from account where name='张三';
+
+-- 2.将张三账户余额-1000
+update account set money=money-1000 where name='张三';
+
+
+-- 将李四账户余额+1000
+update account set money=money+1000 where name='李四';
+```
+
+
+
+## 事务操作
+
+![image-20250807101811560](Mysql数据库.assets/image-20250807101811560.png)
+
+```sql
+select @@autocommit;  -- 自动提交 1
+
+set @@autocommit=0;  -- 设为手动提交
+-- 转账操作
+-- 1.查询张三账户余额
+select * from account where name='张三';
+
+-- 2.将张三账户余额-1000
+update account set money=money-1000 where name='张三';
+
+fjiso...
+-- 将李四账户余额+1000
+update account set money=money+1000 where name='李四';
+
+-- 提交事务
+commit;
+
+-- 回滚事务
+rollback ;
+```
+
+![image-20250807104439412](Mysql数据库.assets/image-20250807104439412.png)
+
+```sql
+-- 方式二
+
+start transaction ;
+
+-- 恢复数据
+update account set money=2000 where name='张三' or name='李四';
+
+-- 转账操作
+-- 1.查询张三账户余额
+select * from account where name='张三';
+
+-- 2.将张三账户余额-1000
+update account set money=money-1000 where name='张三';
+
+
+fsgs...
+-- 将李四账户余额+1000
+update account set money=money+1000 where name='李四';
+
+-- 提交事务
+commit;
+
+-- 回滚事务
+rollback ;
+```
+
+
+
+## 事务四大特性ACID
+
+![image-20250807105932656](Mysql数据库.assets/image-20250807105932656.png)
+
+
+
+## 并发事务问题
+
+![image-20250807110507783](Mysql数据库.assets/image-20250807110507783.png)
+
+![image-20250807110659646](Mysql数据库.assets/image-20250807110659646.png)
+
+![image-20250807110931481](Mysql数据库.assets/image-20250807110931481.png)
+
+
+
+## 事务隔离级别
+
+![image-20250807111254821](Mysql数据库.assets/image-20250807111254821.png)
+
+```sql
+-- 查看事务隔离级别
+select @@transaction_isolation;
+
+-- 设置隔离级别
+set session transaction isolation level read uncommitted ;
+
+set session transaction isolation level repeatable read  ;
+```
+
+
+
+## 小结
+
+![image-20250807121220873](Mysql数据库.assets/image-20250807121220873.png)
+
+
+
+
+
+
+
+
+
+# ==进阶==：
 
