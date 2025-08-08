@@ -1253,3 +1253,217 @@ set session transaction isolation level repeatable read  ;
 
 # ==进阶==：
 
+
+
+# 存储引擎
+
+## Mysql体系结构
+
+![image-20250807165809620](Mysql数据库.assets/image-20250807165809620.png)
+
+
+
+## 存储引擎简介
+
+![image-20250807171145079](Mysql数据库.assets/image-20250807171145079.png)
+
+```
+-- 查询建表语句  -- 默认存储引擎InnoDB
+show create table account;
+
+
+-- 查询当前数据库支持的引擎
+show engines ;
+
+-- 创建表 my_myisam，并制定MyISAM存储引擎
+create table  my_myisam(
+    id int,
+    name varchar(10)
+) engine =MyISAM;
+
+-- 创建表my_memory,并指定Memory存储引擎
+create table  my_memory(
+    id int,
+    name varchar(10)
+) engine =Memory;
+
+```
+
+
+
+## 存储引擎特点
+
+- InniDB
+
+![image-20250808100938668](Mysql数据库.assets/image-20250808100938668.png)
+
+![image-20250808101150208](Mysql数据库.assets/image-20250808101150208.png)
+
+
+
+## MyISAM和Memory
+
+### MyISAM
+
+![image-20250808101724515](Mysql数据库.assets/image-20250808101724515.png)
+
+
+
+### Memory
+
+![image-20250808101741870](Mysql数据库.assets/image-20250808101741870.png)
+
+
+
+### 区别
+
+![image-20250808101812447](Mysql数据库.assets/image-20250808101812447.png)
+
+
+
+
+
+## 存储引擎的选择
+
+![image-20250808102027520](Mysql数据库.assets/image-20250808102027520.png)
+
+
+
+## 总结
+
+![image-20250808102517640](Mysql数据库.assets/image-20250808102517640.png)
+
+
+
+
+
+# 索引
+
+## 索引概述
+
+
+
+
+
+
+
+## 索引结构
+
+
+
+
+
+
+
+## 索引分类
+
+
+
+
+
+
+
+
+
+## 索引语法
+
+
+
+
+
+
+
+## SQL性能分析
+
+
+
+
+
+## 索引使用
+
+
+
+
+
+
+
+
+
+## 索引设计原则
+
+
+
+
+
+
+
+
+
+# SQL优化
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 视图/存储过程/触发器
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 锁
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# InnoDB引擎
+
+
+
+
+
+
+
+
+
+
+
+
+
+# MYSQL管理
+
