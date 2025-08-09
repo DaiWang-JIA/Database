@@ -1341,31 +1341,91 @@ create table  my_memory(
 
 ## 索引概述
 
+![image-20250809105213462](Mysql数据库.assets/image-20250809105213462.png)
 
+![image-20250809105530725](Mysql数据库.assets/image-20250809105530725.png)
 
+- 备注：上述二叉树索引结构的只是一个示意图，并不是真实的索引结构
 
+- 优缺点：
+
+![image-20250809105906603](Mysql数据库.assets/image-20250809105906603.png)
 
 
 
 ## 索引结构
 
+- 介绍
+
+![image-20250809110138432](Mysql数据库.assets/image-20250809110138432.png)
+
+![image-20250809110158253](Mysql数据库.assets/image-20250809110158253.png)
 
 
 
+- 二叉树
+
+![image-20250809110605000](Mysql数据库.assets/image-20250809110605000.png)
+
+
+
+- B-Tree
+
+![image-20250809110841843](Mysql数据库.assets/image-20250809110841843.png)
+
+![image-20250809111624268](Mysql数据库.assets/image-20250809111624268.png)
+
+
+
+
+
+- B+Tree
+
+![image-20250809111908942](Mysql数据库.assets/image-20250809111908942.png)
+
+![image-20250809112234257](Mysql数据库.assets/image-20250809112234257.png)
+
+![image-20250809113104533](Mysql数据库.assets/image-20250809113104533.png)
+
+
+
+- hash
+
+![image-20250809113500686](Mysql数据库.assets/image-20250809113500686.png)
+
+![image-20250809113646982](Mysql数据库.assets/image-20250809113646982.png)
+
+
+
+- 思考
+
+![image-20250809114102719](Mysql数据库.assets/image-20250809114102719.png)
 
 
 
 ## 索引分类
 
+![image-20250809114321795](Mysql数据库.assets/image-20250809114321795.png)
 
+![image-20250809114619380](Mysql数据库.assets/image-20250809114619380.png)
 
+![image-20250809114835791](Mysql数据库.assets/image-20250809114835791.png)
 
+![image-20250809115046616](Mysql数据库.assets/image-20250809115046616.png)
+
+- 思考
+
+![image-20250809120208349](Mysql数据库.assets/image-20250809120208349.png)
 
 
 
 
 
 ## 索引语法
+
+
+
+
 
 
 
